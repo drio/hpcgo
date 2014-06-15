@@ -6,13 +6,14 @@ import (
 	"flag"
 	"os"
 	"text/template"
+	"strings"
 )
 
 type Options struct {
-  Name, Memory, Cores, Queue, Log_dir, Deps string
+  Name, Memory, Cores, Queue, Log_dir, Deps, Cmd string
 }
 
-var defaults = Options { "", "4Gb", "1", "analysis", "submit_logs", "", }
+var defaults = Options { "", "4Gb", "1", "analysis", "submit_logs", "", "", }
 var opts = Options{}
 
 func processArgs() {
@@ -21,6 +22,7 @@ func processArgs() {
 	if opts.Name == "" {
 		error("Job name not provided.")
 	}
+	opts.Cmd = strings.Join(flag.Args(), " ")
 }
 
 func init() {
