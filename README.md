@@ -21,6 +21,26 @@ features. Also, I wanted fast loading times. Other programming languages may
 take seconds to load, specially in a cluster environment where files are stored
 in network storage.
 
+### Install
+
+Installation requires a working Go build [environment](http://golang.org/doc/install.html).
+I will offer precompiled binaries in the near future though.
+
+Example for a i386 linux box:
+
+```sh
+$ wget http://golang.org/dl/go1.2.2.linux-386.tar.gz
+$ tar zxvf go1.2.2.linux-386.tar.gz
+$ mkdir $HOME/gocode
+$ export GOROOT=$HOME/go
+$ export GOPATH=$HOME/gocode
+$ export PATH=$PATH:$GOROOT/bin
+$ export PATH=$PATH:$GOPATH/bin
+$ go get github.com/drio/hpcgo
+$ go install github.com/drio/hpcgo
+$ hpcgo
+```
+
 ### What can you do with hpcgo?
 
 ```sh
