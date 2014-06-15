@@ -1,9 +1,9 @@
 ### Background
 
 Submitting jobs is a common task all my software and analysis pipelines have to
-use do when working in an [HPC cluster](http://en.wikipedia.org/wiki/HPCC).
+do when working in a [HPC cluster](http://en.wikipedia.org/wiki/HPCC).
 Abstracting away the HPC details facilitates the porting of pieces of software
-from different HPC implementations. This too, submit, tries to solve this.
+from different HPC implementations. This tool implements that.
 
 We tell the software, via passing arguments what command we want to run, with
 what resources (memory, number of cores, queue to use ...)  and what
