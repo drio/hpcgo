@@ -7,11 +7,19 @@ import (
 	"os"
 )
 
-func runCmd() {
-	t := template.Must(template.New("cmd").Parse(pbsCmd))
+type pbsBackend struct {
+	template string
+}
+
+func init() {
+	backends["pbs"] = &pbsBackend{pbsCmd}
+}
+
+func (p *pbsBackend) genCode(o *Options) {
+	t := template.Must(template.New("cmd").Parse(p.template))
 	err := t.Execute(os.Stdout, opts)
 	if err != nil {
-		fmt.Println(os.Stderr, "Problems parsing pbsCmd string.", err)
+		fmt.Println(os.Stderr, "Problems parsing pbs template.", err)
 	}
 }
 
@@ -25,3 +33,4 @@ qsub -N {{.Name}} \
 -e {{.Log_dir}}/{{.Name}}.e \
 -l nodes=1:ppn={{.Cores}},mem={{.Memory}} -V
 `
+

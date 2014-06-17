@@ -10,10 +10,10 @@ import (
 )
 
 type Options struct {
-  Name, Memory, Cores, Queue, Log_dir, Deps, Cmd string
+  Name, Memory, Cores, Queue, Log_dir, Deps, Cmd, BackEnd string
 }
 
-var defaults = Options { "", "4Gb", "1", "analysis", "submit_logs", "", "", }
+var defaults = Options { "", "4Gb", "1", "analysis", "submit_logs", "", "", "pbs" }
 var opts = Options{}
 
 func processArgs() {
@@ -32,6 +32,7 @@ func init() {
 	flag.StringVar(&opts.Queue, "q", defaults.Queue, "Queue to use.",)
 	flag.StringVar(&opts.Log_dir, "l", defaults.Log_dir, "Directory to use for logging.",)
 	flag.StringVar(&opts.Deps, "d", defaults.Deps, "List of dependencies.",)
+	flag.StringVar(&opts.BackEnd, "b", defaults.BackEnd, "Backend cluster target to use.",)
 }
 
 func error(msg string) {
@@ -51,6 +52,7 @@ func usage() {
 const usageString = `
 Usage : hpggo -s job_name [<options>] <cmd>
 
+  -b backend cluster to use when generating target code ({{.BackEnd}})
   -m memory ({{.Memory}})
   -c number of cores ({{.Cores}})
   -q queue to use ({{.Queue}})

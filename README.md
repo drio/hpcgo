@@ -26,7 +26,7 @@ in network storage.
 Installation requires a working Go build [environment](http://golang.org/doc/install.html).
 I will offer precompiled binaries in the near future though.
 
-Example for a i386 linux box:
+Example for a i386 linux box (without go distribution installed):
 
 ```sh
 $ wget http://golang.org/dl/go1.2.2.linux-386.tar.gz
@@ -40,6 +40,16 @@ $ go get github.com/drio/hpcgo
 $ go install github.com/drio/hpcgo
 $ hpcgo
 ```
+
+If you have go distribution installed:
+
+```sh
+$ go get github.com/drio/hpcgo
+$ go install github.com/drio/hpcgo
+$ hpcgo
+```
+
+
 
 ### What can you do with hpcgo?
 
