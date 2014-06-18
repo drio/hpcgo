@@ -3,8 +3,8 @@ package main
 
 import (
 	"fmt"
-	"text/template"
 	"os"
+	"text/template"
 )
 
 type pbsBackend struct {
@@ -33,4 +33,3 @@ qsub -N {{.Name}} \
 -e {{.Log_dir}}/{{.Name}}.e \
 -l nodes=1:ppn={{.Cores}},mem={{.Memory}} -V
 `
-

@@ -2,19 +2,18 @@
 package main
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
 	"os"
-	"text/template"
 	"strings"
+	"text/template"
 )
 
-
 type Options struct {
-  Name, Memory, Cores, Queue, Log_dir, Deps, Cmd, BackEnd string
+	Name, Memory, Cores, Queue, Log_dir, Deps, Cmd, BackEnd string
 }
 
-var defaults = Options { "", "4Gb", "1", "analysis", "submit_logs", "", "", "pbs" }
+var defaults = Options{"", "4Gb", "1", "analysis", "submit_logs", "", "", "pbs"}
 var opts = Options{}
 
 func processArgs() {
@@ -30,13 +29,13 @@ func processArgs() {
 }
 
 func init() {
-	flag.StringVar(&opts.Name, "s", defaults.Name, "Job name.",)
-	flag.StringVar(&opts.Memory, "m", defaults.Memory, "Amount of memory to request.",)
-	flag.StringVar(&opts.Cores, "c", defaults.Cores, "Number of cores to request.",)
-	flag.StringVar(&opts.Queue, "q", defaults.Queue, "Queue to use.",)
-	flag.StringVar(&opts.Log_dir, "l", defaults.Log_dir, "Directory to use for logging.",)
-	flag.StringVar(&opts.Deps, "d", defaults.Deps, "List of dependencies.",)
-	flag.StringVar(&opts.BackEnd, "b", defaults.BackEnd, "Backend cluster target to use.",)
+	flag.StringVar(&opts.Name, "s", defaults.Name, "Job name.")
+	flag.StringVar(&opts.Memory, "m", defaults.Memory, "Amount of memory to request.")
+	flag.StringVar(&opts.Cores, "c", defaults.Cores, "Number of cores to request.")
+	flag.StringVar(&opts.Queue, "q", defaults.Queue, "Queue to use.")
+	flag.StringVar(&opts.Log_dir, "l", defaults.Log_dir, "Directory to use for logging.")
+	flag.StringVar(&opts.Deps, "d", defaults.Deps, "List of dependencies.")
+	flag.StringVar(&opts.BackEnd, "b", defaults.BackEnd, "Backend cluster target to use.")
 }
 
 func error(msg string) {
