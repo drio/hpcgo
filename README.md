@@ -54,13 +54,13 @@ $ hpcgo
 ### What can you do with hpcgo?
 
 ```sh
-  # Iterate over a bunch of files and hgcgo a jobs using each file
+  # Iterate over a bunch of files and submit a jobs using each file
   $ ls *.fastq | xargs -i hgcgo -s fmi.{} -m 8G -c 8 "sga index --no-reverse -d 5000000 -t 8 {}"
 
   # Similar to before but using shell's for
   $ for i in `ls ../input/reads.*.fastq`; do F=`basename $i .fastq`; hgcgo -s pp.$F "sga preprocess -o $F.pp.fastq --pe-mode 2 $i"; done
 
-  # hgcgo a two jobs, the second one has to run after the first one completes
+  # submit a two jobs, the second one has to run after the first one completes
   $ hgcgo -s one "touch ./one.txt" | bash > /tmp/deps.txt ; hgcgo -s two -f /tmp/deps.txt  "sleep 2;touch ./two.txt" | bash
 
   # Same as before but now we specify the jobid in the command line instead in a file

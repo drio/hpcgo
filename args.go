@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+
 type Options struct {
   Name, Memory, Cores, Queue, Log_dir, Deps, Cmd, BackEnd string
 }
@@ -21,6 +22,9 @@ func processArgs() {
 	flag.Parse()
 	if opts.Name == "" {
 		error("Job name not provided.")
+	}
+	if _, found := backends[opts.BackEnd]; !found {
+		error(fmt.Sprintf("<%s> is not a valid backend.", opts.BackEnd))
 	}
 	opts.Cmd = strings.Join(flag.Args(), " ")
 }
