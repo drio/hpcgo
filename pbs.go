@@ -23,13 +23,11 @@ func (p *pbsBackend) genCode(o *Options) {
 	}
 }
 
-const pbsCmd = `
-mkdir -p {{.Log_dir}}; \
-echo '{{.Cmd}}' | \
-qsub -N {{.Name}} \
--q {{.Queue}} \
--d $(pwd) \
--o {{.Log_dir}}/{{.Name}}.o \
--e {{.Log_dir}}/{{.Name}}.e \
--l nodes=1:ppn={{.Cores}},mem={{.Memory}} -V
+const pbsCmd = `mkdir -p {{.Log_dir}}; echo '{{.Cmd}}' | \
+	qsub -N {{.Name}} \
+	-q {{.Queue}} \
+	-d $(pwd) \
+	-o {{.Log_dir}}/{{.Name}}.o \
+	-e {{.Log_dir}}/{{.Name}}.e \
+	-l nodes=1:ppn={{.Cores}},mem={{.Memory}} -V
 `

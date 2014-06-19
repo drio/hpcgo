@@ -6,81 +6,29 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"text/template"
 )
 
-type Options struct {
-	Name, Memory, Cores, Queue, Log_dir, Deps, Cmd, BackEnd string
+// Encapsulates details of a Command (hpcgo <command>)
+type Command struct {
+	Run         func(cmd *Command, args []string)
+	UsageLine   string
+	Short       string
+	Long        string
+	Flag        flag.FlagSet
 }
 
-var defaults = Options{"", "4Gb", "1", "analysis", "submit_logs", "", "", "pbs"}
-var opts = Options{}
-
-func processArgs() {
-	flag.Usage = usage
-	flag.Parse()
-	if opts.Name == "" {
-		error("Job name not provided.")
+// Name returns the command's name: the first word in the usage line.
+func (c *Command) Name() string {
+	name := c.UsageLine
+	i := strings.Index(name, " ")
+	if i >= 0 {
+		name = name[:i]
 	}
-	if _, found := backends[opts.BackEnd]; !found {
-		error(fmt.Sprintf("<%s> is not a valid backend.", opts.BackEnd))
-	}
-	opts.Cmd = strings.Join(flag.Args(), " ")
+	return name
 }
 
-func init() {
-	flag.StringVar(&opts.Name, "s", defaults.Name, "Job name.")
-	flag.StringVar(&opts.Memory, "m", defaults.Memory, "Amount of memory to request.")
-	flag.StringVar(&opts.Cores, "c", defaults.Cores, "Number of cores to request.")
-	flag.StringVar(&opts.Queue, "q", defaults.Queue, "Queue to use.")
-	flag.StringVar(&opts.Log_dir, "l", defaults.Log_dir, "Directory to use for logging.")
-	flag.StringVar(&opts.Deps, "d", defaults.Deps, "List of dependencies.")
-	flag.StringVar(&opts.BackEnd, "b", defaults.BackEnd, "Backend cluster target to use.")
+func (c *Command) Usage() {
+	fmt.Fprintf(os.Stderr, "usage: %s\n\n", c.UsageLine)
+	fmt.Fprintf(os.Stderr, "%s\n", strings.TrimSpace(c.Long))
+	os.Exit(2)
 }
-
-func error(msg string) {
-	fmt.Fprintln(os.Stderr, "Ups!:", msg)
-	usage()
-	os.Exit(1)
-}
-
-func usage() {
-	t := template.Must(template.New("usage").Parse(usageString))
-	err := t.Execute(os.Stderr, opts)
-	if err != nil {
-		fmt.Println(os.Stderr, "Problems parsing usage string.", err)
-	}
-}
-
-const usageString = `
-Usage : hpggo -s job_name [<options>] <cmd>
-
-  -b backend cluster to use when generating target code ({{.BackEnd}})
-  -m memory ({{.Memory}})
-  -c number of cores ({{.Cores}})
-  -q queue to use ({{.Queue}})
-  -l directory to use to dump logs ({{.Log_dir}})
-  -d list of dependencies. dep1:dep2:.... :depn ("{{.Deps}}")
-  -f file to locate list of dependencies. One line, one depency.
-
-  <cmd> is the set of shell commands to execute
-  If no <cmd> provided, we will read from stdin
-
-Examples:
-  # Iterate over a bunch of files and hgpgo a jobs using each file
-  $ ls *.fastq | xargs -i hgpgo -s fmi.{} -m 8G -c 8 "sga index --no-reverse -d 5000000 -t 8 {}"
-
-  # Similar to before but using shell's for
-  $ for i in $(ls ../input/reads.*.fastq); do F=$(basename $i .fastq); hgpgo -s pp.$F "sga preprocess -o $F.pp.fastq --pe-mode 2 $i"; done
-
-  # hgpgo a two jobs, the second one has to run after the first one completes
-  $ hgpgo -s one "touch ./one.txt" | bash > /tmp/deps.txt ; hgpgo -s two -f /tmp/deps.txt  "sleep 2;touch ./two.txt" | bash
-
-  # Same as before but now we specify the jobid in the command line instead in a file
-  $ hgpgo -s filter -d 3678650.sug-moab -m 20G -c 6 "sga fm-merge -m 65 -t 6 final.filter.pass.fa"
-
-  # And my favourite one.
-  # The second command reads the jobid from the standard input and uses it as dep
-  $ (hgpgo -s one "sleep 15; touch ./one.txt" | bash) | hgpgo -s two -f -  "sleep 2;touch ./two.txt" | bash
-
-`
