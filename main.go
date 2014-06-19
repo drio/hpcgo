@@ -11,6 +11,7 @@ import (
 
 var commands = []*Command{
 	cmdSubmit,
+	cmdVersion,
 }
 
 func main() {
@@ -91,12 +92,12 @@ var helpTemplate = `Usage: {{.UsageLine}}
 {{.Long}}
 `
 
-var mainUsageTemplate = `hpcgo is to help you send jobs to an HPC cluster.
+var mainUsageTemplate = `hpcgo helps you sending jobs to an HPC cluster.
 
-Use "go help [command]" for more info about a command.
+Use "hpcgo help [command]" for more info about a command.
 
 The commands are:
-{{range .}}
-    {{.Name | printf "%-11s"}} {{.Short}}
+
+{{range .}} {{.Name | printf "%-11s"}}: {{.Short}}
 {{end}}
 `
